@@ -1,0 +1,9 @@
+//extending the base tsconfig.json rather than writing whole tsconfig.json file
+{
+  "extends": "@repo/typescript-config/base.json",
+  "compilerOptions": {
+    "outDir": "dist"
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}

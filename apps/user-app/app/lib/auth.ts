@@ -21,6 +21,7 @@ export const authOptions = {
             });
 
             if (existingUser) {
+                console.log("User Exists");
                 const passwordValidation = await bcrypt.compare(credentials.password, existingUser.password);
                 if (passwordValidation) {
                     return {
@@ -31,7 +32,7 @@ export const authOptions = {
                 }
                 return null;
             }
-
+            //  we should do the otp validation of number so that no one can hijack else numbers.
             try {
                 const user = await db.user.create({
                     data: {
