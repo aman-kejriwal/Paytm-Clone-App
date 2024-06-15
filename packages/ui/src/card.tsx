@@ -1,18 +1,18 @@
 export function Card({
-  className,
+  // className,
   title,
   children,
-  href,
+  // href,
 }: {
-  className?: string;
+  // className?: string;
   title: string;
   children: React.ReactNode;
-  href: string;
+  // href: string;
 }): JSX.Element {
   return (
     <a
-      className={className}
-      href={`${href}?utm_source=create-turbo&utm_medium=basic&utm_campaign=create-turbo"`}
+      // className={className}
+      // href={`${href}?utm_source=create-turbo&utm_medium=basic&utm_campaign=create-turbo"`}
       rel="noopener noreferrer"
       target="_blank"
     >

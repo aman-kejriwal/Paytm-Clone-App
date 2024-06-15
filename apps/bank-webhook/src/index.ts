@@ -1,6 +1,7 @@
 import express from "express";
 import db from "@repo/db/client";
 const app=express();
+  // handle request coming from the HDFC bank about a payment done through HDFC bank with user details,amount and a secret token.
   app.get("/hdfcWebhook",async (req,res)=>{
     // Add input validation here, ZOD
     // check the request actually came hdfc bank, use webhook secret here 
