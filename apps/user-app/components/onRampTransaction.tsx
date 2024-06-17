@@ -18,16 +18,19 @@ export const OnRampTransactions = ({
             </div>
         </Card>
     }
-    return <Card title="Recent Transactions">
-        <div className="pt-2">
-            {transactions.map(t => <div className="flex justify-between">
-                <div>
-                    <div className="text-sm">
-                        Received INR
+    return <Card title="Recent Transactions">   
+        <div >
+            {transactions.map(t => <div className="py-2 flex justify-between border-b  border-slate-300 ">
+                <div className="flex items-center gap-5">
+                    <div>
+                        <div className="text-sm">
+                            Received INR
+                        </div>
+                        <div className="text-slate-600 text-xs">
+                            {t.time.toDateString()}
+                        </div>
                     </div>
-                    <div className="text-slate-600 text-xs">
-                        {t.time.toDateString()}
-                    </div>
+                    <Status status={t.status}></Status>
                 </div>
                 <div className="flex flex-col justify-center">
                     + Rs {t.amount / 100}
@@ -36,4 +39,10 @@ export const OnRampTransactions = ({
             </div>)}
         </div>
     </Card>
+}
+function Status({status}:{status:string}){
+    if(status=="Success"){
+        return <div className="text-green-600">Success</div>
+    }
+        else return <div className="text-red-600">Processing</div>
 }
