@@ -11,7 +11,17 @@ app.use(express.json());
         userId: req.body.user_identifier,
         amount: req.body.amount
         };
-
+        const onRamp=await db.onRampTransaction.findFirst({
+            where:{
+                token:paymentInformation.token
+            }
+        });
+        if(onRamp?.status=="Success"){
+            res.status(411).json({
+                msg:"Payment is already completed"
+            })
+        }
+        else {
        const balance=await db.balance.findFirst({
             where:{
                 userId:paymentInformation.userId
@@ -54,5 +64,7 @@ app.use(express.json());
             msg:"Failed to capture payment" 
         })
     }
+}
   })
+  
 app.listen(3003);
