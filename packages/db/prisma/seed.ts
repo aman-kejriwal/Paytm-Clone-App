@@ -8,7 +8,7 @@ async function main() {
     update: {},
     create: {
       number: '1111111111',
-      password: await bcrypt.hash('alice', 10),
+      password: await bcrypt.hash(' ', 10),
       name: 'alice',
       Balance: {
         create: {

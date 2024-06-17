@@ -1,11 +1,11 @@
 import express from "express";
 import db from "@repo/db/client";
 const app=express();
+app.use(express.json());
   // handle request coming from the HDFC bank about a payment done through HDFC bank with user details,amount and a secret token.
-  app.get("/hdfcWebhook",async (req,res)=>{
+  app.post("/hdfcWebhook",async (req,res)=>{
     // Add input validation here, ZOD
     // check the request actually came hdfc bank, use webhook secret here 
-
     const paymentInformation = {
         token: req.body.token,
         userId: req.body.user_identifier,
@@ -24,7 +24,7 @@ const app=express();
             userId:paymentInformation.userId
           },
           data:{
-            amount:balance+paymentInformation.amount
+            amount:balance?.amount+paymentInformation.amount
           }
        });
 
@@ -42,7 +42,7 @@ const app=express();
     }
     catch(e){
         console.log(e);
-        db.onRampTransaction.update({
+        await db.onRampTransaction.update({
             where :{
                 token:paymentInformation.token
             },
@@ -55,3 +55,4 @@ const app=express();
         })
     }
   })
+app.listen(3003);
