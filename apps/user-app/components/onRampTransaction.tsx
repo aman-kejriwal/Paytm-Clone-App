@@ -20,7 +20,7 @@ export const OnRampTransactions = ({
     }
     return <Card title="Recent Transactions">   
         <div >
-            {transactions.map(t => <div className="py-2 flex justify-between border-b  border-slate-300 ">
+            {transactions.map((t,index) => <div key={index.toString()} className="py-2 flex justify-between border-b  border-slate-300 ">
                 <div className="flex items-center gap-5">
                     <div>
                         <div className="text-sm">
@@ -30,7 +30,10 @@ export const OnRampTransactions = ({
                             {t.time.toDateString()}
                         </div>
                     </div>
-                    <Status status={t.status}></Status>
+                    <div>
+                        <Status status={t.status}></Status>
+                        <div className="text-xs" >By {t.provider}</div>
+                    </div>
                 </div>
                 <div className="flex flex-col justify-center">
                     + Rs {t.amount / 100}

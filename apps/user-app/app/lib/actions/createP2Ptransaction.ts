@@ -2,11 +2,13 @@
 import prisma from "@repo/db/client"
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth";
+import { resolve } from "path";
+import { setTimeout } from "timers/promises";
 
 export default async function(number:string,amount:number){
     const session=await getServerSession(authOptions);
     const senderID =session.user.id;
-    const username=session.user.name||number;
+    const senderName=session.user.name||session.user.email;
     const token=Math.random().toString();
     const user=await prisma.user.findFirst({
         where:{
@@ -15,7 +17,7 @@ export default async function(number:string,amount:number){
     });
     const receiverId=user?.id;
         //phone number not found in db
-        if(!user){
+        if(!user){ 
             return "errorPhone";
         }
         //when you enter your number
@@ -35,19 +37,22 @@ export default async function(number:string,amount:number){
         if((senderBalance?.amount||Number.MAX_VALUE)<amount*100){
             return "errorInsuffiFund";
         }
-    //   try{
-            await prisma.onRampTransaction.create({
+        //function for either all happen or nothing will happen among all inside.
+        await prisma.$transaction(async (client)=>{ 
+            // LOCKING the Transaction so that other transaction won't enter while first in execution.
+            await client.$queryRaw`SELECT * FROM "Balance" WHERE "userId" = ${Number(senderID)} FOR UPDATE`;
+            await client.onRampTransaction.create({
                 data:{
                     amount:Number(amount)*100,
                     status:"Success",    
                     token,
-                    provider:username,
+                    provider:senderName,
                     userId:Number(receiverId),
                     startTime:new Date()
                 }
             })
             const recTotalBal=(receiverBalance?.amount||0)+amount*100
-            await prisma.balance.update({
+            await client.balance.update({
                 where:{
                     userId:Number(receiverId)
                 },
@@ -55,7 +60,7 @@ export default async function(number:string,amount:number){
                     amount:recTotalBal
                 }
             })
-            await prisma.balance.update({
+            await client.balance.update({
                 where:{
                     userId:Number(senderID)
                 },
@@ -63,6 +68,7 @@ export default async function(number:string,amount:number){
                     amount:(senderBalance?.amount||0)-amount*100
                 }
             })
+        });
     //   }
     //   catch(e){
     //     console.log(e);

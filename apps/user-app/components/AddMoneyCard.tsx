@@ -30,8 +30,9 @@ export const AddMoney = () => {
         <Select onSelect={(value) => {
             setRedirectUrl(SUPPORTED_BANKS.find(x => x.name === value)?.redirectUrl || "")
             setProvider(value);
-        }} options={SUPPORTED_BANKS.map(x => ({
-            key: x.name,
+        }} options={SUPPORTED_BANKS.map((x,index) => ({
+            // key: x.name,
+            key:index.toString(),
             value: x.name
         }))} />
         <div className="flex justify-center pt-4">
