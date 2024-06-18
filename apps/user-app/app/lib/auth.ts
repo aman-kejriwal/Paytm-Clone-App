@@ -1,6 +1,7 @@
 import db from "@repo/db/client";
 import CredentialsProvider from "next-auth/providers/credentials"
 import bcrypt from "bcrypt";
+import { Amiko } from "next/font/google";
 
 export const authOptions = {
     providers: [
@@ -40,7 +41,14 @@ export const authOptions = {
                         password: hashedPassword
                     }
                 });
-            
+                // Initialization of Balance Table just because w/o initialization we are not able to access the balance table and change the amount, that why have to initialize it.
+                await db.balance.create({
+                    data:{
+                        userId:user.id,
+                        amount:0,
+                        locked:0
+                    }
+                })
                 return {
                     id: user.id.toString(),
                     name: user.name,
@@ -49,7 +57,6 @@ export const authOptions = {
             } catch(e) {
                 console.error(e);
             }
-
             return null
           },
         })
@@ -64,4 +71,3 @@ export const authOptions = {
         }
     }
   }
-  
